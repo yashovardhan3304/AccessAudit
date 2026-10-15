@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  audits      Audit[]
+}
+
+model Audit {
+  id             String    @id @default(cuid())
+  projectId      String?
+  project        Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  targetUrl      String
+  finalUrl       String?
+  status         String
+  tags           String[]
+  browserVersion String?
+  axeVersion     String?
+  startedAt      DateTime  @default(now())
+  completedAt    DateTime?
+  errorInfo      String?
+  createdAt      DateTime  @default(now())
+  findings       Finding[]
+  reports        Report[]
+}
+
+model Finding {
+  id              String   @id @default(cuid())
+  auditId         String
+  audit           Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  ruleId          String
+  description     String
+  impact          String
+  helpText        String?
+  helpUrl         String?
+  affectedUrl     String?
+  selector        String?
+  htmlSnippet     String?
+  failureSummary  String?
+  wcagMappings    Json?
+  pourClassification String?
+  evidenceMetadata Json?
+  fingerprint     String?
+  createdAt       DateTime @default(now())
+}
+
+model Report {
+  id             String   @id @default(cuid())
+  auditId        String
+  audit          Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  format         String
+  generationStatus String
+  generatedAt    DateTime @default(now())
+  storageRef     String?
+}

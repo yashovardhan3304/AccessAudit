@@ -1,0 +1,21 @@
+{
+  "name": "accessaudit",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace @accessaudit/api\" \"npm run dev --workspace @accessaudit/web\"",
+    "build": "npm run build --workspace @accessaudit/shared && npm run build --workspace @accessaudit/api && npm run build --workspace @accessaudit/web",
+    "test": "npm run test --workspace @accessaudit/api && npm run test --workspace @accessaudit/web",
+    "lint": "npm run lint --workspace @accessaudit/api && npm run lint --workspace @accessaudit/web",
+    "db:generate": "npm run db:generate --workspace @accessaudit/api",
+    "db:migrate": "npm run db:migrate --workspace @accessaudit/api",
+    "db:seed": "npm run db:seed --workspace @accessaudit/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
